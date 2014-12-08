@@ -1,0 +1,6 @@
+{
+	"name": "bigfoot_test",
+	"require": {
+		"yiisoft/yii": "1.1.15"
+    }
+}

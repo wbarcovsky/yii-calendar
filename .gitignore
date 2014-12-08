@@ -1,0 +1,11 @@
+.idea/
+nbproject/
+
+Thumbs.db
+*.log
+
+assets/
+protected/runtime/
+img_tmp/
+user_files/
+protected/vendor/
