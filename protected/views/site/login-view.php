@@ -6,7 +6,7 @@ $this->client_script->registerCssFile('css/login.css');
 <div class="jumbotron text-center">
 	<h2 class="text-success">Wellcome to my test web-application!</h2>
 	<p>Please, write your email to start working</p>
-	<form class="form-group" action="<?= Yii::app()->createUrl('site/login'); ?>" method="post">
+	<form class="form-group" action="<?= Yii::app()->createUrl('site/login'); ?>" method="post" onsubmit='return ajax_submit(this)'>
 		<div class="form-horizontal">
 			<div class="col-md-6 col-md-offset-2">
 				<input type="text" class="form-control" name="email" />
@@ -17,3 +17,13 @@ $this->client_script->registerCssFile('css/login.css');
 		</div>
 	</form>
 </div>
+<script>
+	function show_register()
+	{
+		console.log('Show register');
+	}
+	function show_login()
+	{
+		console.log('Show login!');
+	}
+</script>

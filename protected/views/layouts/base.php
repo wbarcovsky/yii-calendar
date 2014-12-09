@@ -11,6 +11,11 @@
 	$this->client_script->registerCssFile('css/bootstrap.min.css');
 	$this->client_script->registerCssFile('css/bootstrap-theme.min.css');
 	$this->client_script->registerScriptFile('js/bootstrap.min.js');
+
+	$this->client_script->registerScriptFile('js/sweet-alert.min.js');
+	$this->client_script->registerCssFile('css/sweet-alert.css');
+
+	$this->client_script->registerScriptFile('js/ajax-form.js');
 	?>
 
 </head>
