@@ -8,11 +8,12 @@
 class FormLogin extends CFormModel
 {
 	const ACTION_REGISTER = 'register';
-	const ACTION_LOGIN = 'login';
+	const ACTION_LOGIN    = 'login';
 
 	public $email;
 	public $password;
-	public $repeat_password;
+	public $password_new;
+	public $password_repeat;
 
 	/**
 	 * Declares the validation rules.
@@ -22,7 +23,7 @@ class FormLogin extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('email', 'email', 'allowEmpty' => false, 'message' => 'You should enter valid email address'),
+			array('email', 'email', 'allowEmpty' => false, 'message' => 'You should enter correct email address'),
 
 			// Login rules
 			array('password', 'required', 'on' => self::ACTION_LOGIN),
@@ -30,9 +31,9 @@ class FormLogin extends CFormModel
 
 			// Register rules
 			array('email', 'unique', 'on' => self::ACTION_REGISTER, 'className' => 'Users', 'attributeName' => 'email', 'caseSensitive' => true, 'message' => 'Sorry, but this email already taken!'),
-			array('password', 'required', 'on' => self::ACTION_REGISTER),
+			array('password_new', 'required', 'on' => self::ACTION_REGISTER),
 			array('password_repeat', 'required', 'on' => self::ACTION_REGISTER, 'message' => 'You should confirm your password!'),
-			array('password', 'compare', 'compareAttribute' => 'repeat_password', 'on' => self::ACTION_REGISTER, 'message' => 'Passwords do not match!'),
+			array('password_new', 'compare', 'compareAttribute' => 'password_repeat', 'on' => self::ACTION_REGISTER, 'message' => 'Passwords do not match!'),
 		);
 	}
 
@@ -41,7 +42,10 @@ class FormLogin extends CFormModel
 	 */
 	public function attributeLabels()
 	{
-		return array('password_repeat' => 'confirm password');
+		return array(
+			'password_new' => 'password',
+			'password_repeat' => 'confirm password',
+		);
 	}
 
 	/**
@@ -60,34 +64,20 @@ class FormLogin extends CFormModel
 		}
 	}
 
-	public function email_registred()
-	{
-		$check_email = Users::model()->findByAttributes(array('email' => $this->email));
-		if (is_null($check_email))
-		{
-			return false;
-		}
-
-		return true;
-	}
-
 	/**
 	 * Register new user
 	 */
 	public function register()
 	{
-		if ($this->email_registred())
+		if ( ! is_null(Users::findUserByEmail($this->email)))
 		{
 			$this->addError('email', 'Sorry, but this email already taken');
 			return false;
 		}
 
-		$user = new Users();
-		$user->email = $this->email;
-		$user->password = md5($this->password);
-		$user->save();
+		$user = Users::register($this->email, $this->password_new);
 
-		$identity = new UserIdentity($user->email, $this->password);
+		$identity = new UserIdentity($user->email, $this->password_new);
 		$identity->authenticate();
 		return true;
 	}

@@ -2,3 +2,14 @@
 {
 	min-height: 300px;
 }
+.form-control
+{
+	margin-bottom: 20px;
+	width: 50% !important;
+	display: inline-block !important;
+}
+
+.invisible
+{
+	display: none;
+}

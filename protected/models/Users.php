@@ -61,4 +61,19 @@ class Users extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public static function register($email, $password)
+	{
+		$user = new Users();
+		$user->email = $email;
+		$user->password = md5($password);
+		$user->save();
+
+		return $user;
+	}
+
+	public static function findUserByEmail($email)
+	{
+		return Users::model()->find('LOWER(email)=?', array(strtolower($email)));
+	}
 }

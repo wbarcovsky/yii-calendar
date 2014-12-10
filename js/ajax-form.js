@@ -11,6 +11,10 @@ function ajax_submit(form)
 	var action     = forma.attr('action');
 	var form_data  = forma.serialize();
 	forma.attr('disabled', 'disabled');
+	if (forma.find('fieldset').length)
+	{
+		forma.find('fieldset').attr('disabled', 'disabled');
+	}
 	$.ajax({
 		type: 'POST',
 		url: action,
@@ -28,7 +32,13 @@ function ajax_submit(form)
 			}
 			catch (e)
 			{
-				console.log(msg);
+				console.log(e);
+				forma.removeAttr('disabled');
+				if (forma.find('fieldset').length)
+				{
+					forma.find('fieldset').removeAttr('disabled');
+				}
+
 				swal('Ошибка AJAX запроса.', 'Ooops! Что-то пошло не так...');
 				return;
 			}
@@ -55,12 +65,23 @@ function ajax_submit(form)
 			{
 				swal(obj.data);
 			}
+
 			forma.removeAttr('disabled');
+			if (forma.find('fieldset').length)
+			{
+				forma.find('fieldset').removeAttr('disabled');
+			}
 		},
 		
 		error: function(xhr, status, error) {
 			
 			forma.removeAttr('disabled');
+
+			if (forma.find('fieldset').length)
+			{
+				forma.find('fieldset').removeAttr('disabled');
+			}
+
 
 			console.log(xhr);
 

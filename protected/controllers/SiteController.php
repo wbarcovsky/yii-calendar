@@ -5,7 +5,8 @@ class SiteController extends BaseController
 
 	public function actionIndex()
 	{
-		$this->render('index');
+		print 'Wellcome!';
+		//$this->render('index');
 	}
 
 	/**
@@ -13,51 +14,55 @@ class SiteController extends BaseController
 	 */
 	public function actionLogin()
 	{
-		if ( ! isset($_POST['email']))
+		if ( ! isset($_POST['action']))
 		{
 			$this->render('login-view');
 		}
 		else
 		{
-			if ( ! isset($_POST['password'])) // Show new data fields
+			try
 			{
-				$action = '';
-			}
-			elseif (isset($_POST['repeat_password'])) // Show new data fields
-			{
-				$action = FormLogin::ACTION_REGISTER;
-			}
-			else
-			{
-				$action = FormLogin::ACTION_LOGIN;
-			}
-
-			$form = new FormLogin($action);
-			$form->attributes = $_POST;
-
-			if ($form->validate() && $action === FormLogin::ACTION_REGISTER)
-			{
-				$form->register();
-			}
-
-			if ($form->hasErrors())
-			{
-				Ajax::warning($form->firstError());
-			}
-
-			if ($action === '')
-			{
-				if ($form->email_registred())
+				$action = $_POST['action'];
+				if ( ! in_array($action, array('check', FormLogin::ACTION_REGISTER, FormLogin::ACTION_LOGIN)))
 				{
-					Ajax::custom('show_login');
+					throw new HttpException('Wrong input data!');
+				}
+
+				$form = new FormLogin($action);
+				$form->attributes = $_POST;
+
+				if ($form->validate() && $action === FormLogin::ACTION_REGISTER)
+				{
+					$form->register();
+				}
+
+				if ($form->hasErrors())
+				{
+					Ajax::warning($form->firstError());
+				}
+
+				// Shows fields for register or sing in
+				if ($action === 'check')
+				{
+					if (is_null(Users::findUserByEmail($form->email)))
+					{
+						Ajax::custom('show_register');
+					}
+					else
+					{
+						Ajax::custom('show_login');
+					}
 				}
 				else
 				{
-					Ajax::custom('show_register');
+					Ajax::redirect('site/index');
 				}
+
 			}
-			if ($action === FormLogin::ACTION_REGISTER)
-			Ajax::redirect('site/index');
+			catch (Exception $e)
+			{
+				Ajax::warning($e->getMessage());
+			}
 		}
 	}
 
@@ -78,7 +83,6 @@ class SiteController extends BaseController
 			}
 		}
 	}
-
 
 	/**
 	 * Logs out the current user and redirect to homepage.
