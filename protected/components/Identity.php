@@ -5,8 +5,11 @@
  * It contains the authentication method that checks if the provided
  * data can identity the user.
  */
-class UserIdentity extends CUserIdentity
+class Identity extends CUserIdentity
 {
+	/** @var Users users's data from DB */
+	public $profile;
+
 	/**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password
@@ -22,6 +25,7 @@ class UserIdentity extends CUserIdentity
 		{
 			return FALSE;
 		}
+		$this->profile = $res;
 		$this->setState('profile', $res);
 		$duration = 3600*24*10; // 10 days
 		Yii::app()->user->login($this, $duration);

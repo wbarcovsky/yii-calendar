@@ -9,6 +9,7 @@ class FormLogin extends CFormModel
 {
 	const ACTION_REGISTER = 'register';
 	const ACTION_LOGIN    = 'login';
+	const ACTION_CHECK    = 'check';
 
 	public $email;
 	public $password;
@@ -56,7 +57,7 @@ class FormLogin extends CFormModel
 	{
 		if( ! $this->hasErrors())
 		{
-			$identity = new UserIdentity($this->email, $this->password);
+			$identity = new Identity($this->email, $this->password);
 			if ( ! $identity->authenticate())
 			{
 				$this->addError('password', 'Incorrect username or password.');
@@ -77,7 +78,7 @@ class FormLogin extends CFormModel
 
 		$user = Users::register($this->email, $this->password_new);
 
-		$identity = new UserIdentity($user->email, $this->password_new);
+		$identity = new Identity($user->email, $this->password_new);
 		$identity->authenticate();
 		return true;
 	}

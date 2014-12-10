@@ -5,8 +5,8 @@ class SiteController extends BaseController
 
 	public function actionIndex()
 	{
-		print 'Wellcome!';
-		//$this->render('index');
+		$data['events'] = $this->user->profile->errors;
+		$this->render('index-view', $data);
 	}
 
 	/**
@@ -23,7 +23,8 @@ class SiteController extends BaseController
 			try
 			{
 				$action = $_POST['action'];
-				if ( ! in_array($action, array('check', FormLogin::ACTION_REGISTER, FormLogin::ACTION_LOGIN)))
+
+				if ( ! in_array($action, array(FormLogin::ACTION_CHECK, FormLogin::ACTION_REGISTER, FormLogin::ACTION_LOGIN)))
 				{
 					throw new HttpException('Wrong input data!');
 				}
@@ -41,8 +42,7 @@ class SiteController extends BaseController
 					Ajax::warning($form->firstError());
 				}
 
-				// Shows fields for register or sing in
-				if ($action === 'check')
+				if ($action === FormLogin::ACTION_CHECK) // Shows fields for register or sing in
 				{
 					if (is_null(Users::findUserByEmail($form->email)))
 					{
@@ -57,7 +57,6 @@ class SiteController extends BaseController
 				{
 					Ajax::redirect('site/index');
 				}
-
 			}
 			catch (Exception $e)
 			{

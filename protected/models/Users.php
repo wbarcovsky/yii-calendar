@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $email
  * @property string $password
+ * @property Events[] $events
  */
 class Users extends CActiveRecord
 {
@@ -34,9 +35,8 @@ class Users extends CActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
+			'events' => array(self::HAS_MANY, 'Events', 'user_id')
 		);
 	}
 
@@ -67,9 +67,11 @@ class Users extends CActiveRecord
 		$user = new Users();
 		$user->email = $email;
 		$user->password = md5($password);
-		$user->save();
-
-		return $user;
+		if ($user->save())
+		{
+			return $user;
+		}
+		return NULL;
 	}
 
 	public static function findUserByEmail($email)

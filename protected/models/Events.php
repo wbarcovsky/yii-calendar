@@ -108,4 +108,5 @@ class Events extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
 }

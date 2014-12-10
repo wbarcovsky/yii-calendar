@@ -1,6 +1,7 @@
 <?php
 /* @var $this BaseController */
 $this->client_script->registerCssFile('css/login.css');
+$this->pageTitle = 'Login!';
 ?>
 <br/>
 <div class="jumbotron text-center">
@@ -29,7 +30,7 @@ $this->client_script->registerCssFile('css/login.css');
 			</div>
 
 			<input type="submit" class="form-control btn btn-success" value="Send!"/>
-			<input type="hidden" name="action" value="check">
+			<input type="hidden" name="action" value="<?= FormLogin::ACTION_CHECK; ?>">
 		</fieldset>
 	</form>
 </div>
@@ -48,9 +49,9 @@ $this->client_script->registerCssFile('css/login.css');
 
 	function change_email()
 	{
-		if($('#login-form').find("input[name='action']").val() != 'check')
+		if($('#login-form').find("input[name='action']").val() != '<?= FormLogin::ACTION_CHECK; ?>')
 		{
-			$('#login-form').find("input[name='action']").val('check');
+			$('#login-form').find("input[name='action']").val('<?= FormLogin::ACTION_CHECK; ?>');
 			$('#login-form').find("input[name='password']").val('');
 			$('#login-form').find("input[name='password_new']").val('');
 			$('#login-form').find("input[name='password_repeat']").val('');

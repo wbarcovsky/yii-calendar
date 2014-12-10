@@ -18,7 +18,6 @@ class m141208_232613_init_migration extends CDbMigration
 			'text'      => 'varchar(500)',
 			'date'      => 'date NOT NULL',
 			'time_hour' => 'int(10) NOT NULL',
-			'time_min'  => 'int(10) NOT NULL',
 		));
 	}
 

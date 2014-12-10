@@ -1,0 +1,34 @@
+.navbar.alert
+{
+	padding: 0px;
+}
+.panel
+{
+	margin-left: 0px !important;
+}
+.table>thead>tr>th
+{
+	text-align: center !important;
+	cursor: default !important;
+}
+.table>thead>tr>th>span
+{
+	font-size: 0.8em;
+	color: darkgray;
+}
+.table>tbody>tr>td:hover
+{
+	background: #eeeeee;
+	cursor: pointer;
+}
+.table>tbody>tr>td:first-child
+{
+	text-align: right;
+	background: #ffffff !important;
+	cursor: default !important;
+}
+
+.table>tbody>tr>td.current
+{
+	background: #b2dba1 !important;
+}
