@@ -74,7 +74,7 @@ class Events extends CActiveRecord
 	public function uniqueDateTime($attribute, $params)
 	{
 		/** @var Events[] $events */
-		$events = self::model()->findAllByAttributes(array('time_hour' => $this->time_hour, 'date' => $this->date));
+		$events = self::model()->findAllByAttributes(array('time_hour' => $this->time_hour, 'date' => $this->date, 'user_id' => $this->user_id));
 		if ( ! empty($events))
 		{
 			foreach ($events as $other_event)

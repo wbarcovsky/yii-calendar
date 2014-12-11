@@ -116,7 +116,6 @@ function update_events()
 	events.forEach(function(event)
 	{
 		$('td[data-today="' + event.date +'"][data-hour="' + event.time_hour + '"]').addClass('event').text(event.title);
-		console.log('td[data-today="' + event.date +'"][data-hour="' + event.time_hour + '"]');
 		if (event.date == my_date_format(current_date) && event.time_hour == current_hour)
 		{
 			$("input[name='title']").val(event.title);
@@ -143,19 +142,12 @@ function ajax_remove_event()
 	},
 	function()
 	{
-		console.log('1');
 		var data = {};
 		data.id = $("input[name='event_id']").val();
-		console.log(data);
 		var url = $("#remove-button").data('url');
-		console.log(url);
 		$.post(url, data, function(msg)
 		{
-			//console.log(msg);
 			ajax_response(msg);
-		}).error(function(e)
-		{
-			console.log(e);
 		});
 	});
 }
