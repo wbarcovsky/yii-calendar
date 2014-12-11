@@ -103,7 +103,6 @@ function update_events()
 		$('.table').find('td[data-today=' + event.date +'][data-hour=' + event.time_hour + ']').addClass('event').text(event.title);
 		if (event.date == my_date_format(current_date) && event.time_hour == current_hour)
 		{
-			console.log(event);
 			$("input[name='title']").val(event.title);
 			$("input[name='type']").val(event.type);
 			$("input[name='event_id']").val(event.id);
@@ -114,4 +113,47 @@ function update_events()
 
 		}
 	});
+}
+
+function ajax_remove_event()
+{
+	swal({
+		title: "Are you sure?",
+		text: "You will not be able to recover this event!",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Yes, delete it!",   closeOnConfirm: false
+	},
+	function()
+	{
+		console.log('1');
+		var data = {};
+		data.id = $("input[name='event_id']").val();
+		console.log(data);
+		var url = $("#remove-button").data('url');
+		console.log(url);
+		$.post(url, data, function(msg)
+		{
+			//console.log(msg);
+			ajax_response(msg);
+		}).error(function(e)
+		{
+			console.log(e);
+		});
+	});
+}
+
+function upload_events(json)
+{
+	$('#events').text(json);
+	set_new_date(current_date);
+	swal('Event successfully saved!');
+}
+
+function remove_events(json)
+	{
+	$('#events').text(json);
+	set_new_date(current_date);
+	swal('Event successfully removed');
 }

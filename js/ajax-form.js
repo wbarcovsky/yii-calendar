@@ -25,46 +25,7 @@ function ajax_submit(form)
 		},
 		success: function(msg) {
 			
-			var obj;
-			try
-			{
-				obj = JSON.parse(msg);
-			}
-			catch (e)
-			{
-				console.log(e);
-				forma.removeAttr('disabled');
-				if (forma.find('fieldset').length)
-				{
-					forma.find('fieldset').removeAttr('disabled');
-				}
-
-				swal('Ошибка AJAX запроса.', 'Ooops! Что-то пошло не так...');
-				return;
-			}
-			
-			if (obj.function)
-			{
-				if (obj.data)
-				{
-					if (obj.data.length === 2)
-					{
-						window[obj.function](obj.data[0], obj.data[1]);
-					}
-					else
-					{
-						window[obj.function](obj.data);
-					}
-				}
-				else
-				{
-					window[obj.function]();
-				}
-			}
-			else
-			{
-				swal(obj.data);
-			}
+			ajax_response(msg);
 
 			forma.removeAttr('disabled');
 			if (forma.find('fieldset').length)
@@ -82,13 +43,51 @@ function ajax_submit(form)
 				forma.find('fieldset').removeAttr('disabled');
 			}
 
-
 			console.log(xhr);
 
 			swal('Ошибка AJAX запроса!', 'Ooops! Что-то пошло не так...');
 		}
 	});
 	return false;
+}
+
+function ajax_response(msg)
+{
+	var obj;
+	try
+	{
+		obj = JSON.parse(msg);
+	}
+	catch (e)
+	{
+		console.log(e);
+
+		swal('Ошибка AJAX запроса.', 'Ooops! Что-то пошло не так...');
+		return;
+	}
+
+	if (obj.function)
+	{
+		if (obj.data)
+		{
+			if (obj.data.length === 2)
+			{
+				window[obj.function](obj.data[0], obj.data[1]);
+			}
+			else
+			{
+				window[obj.function](obj.data);
+			}
+		}
+		else
+		{
+			window[obj.function]();
+		}
+	}
+	else
+	{
+		swal(obj.data);
+	}
 }
 
 function reload()

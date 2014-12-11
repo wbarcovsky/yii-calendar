@@ -5,7 +5,7 @@ class SiteController extends BaseController
 
 	public function actionIndex()
 	{
-		$data['events'] = Events::model()->findAllByAttributes(array('user_id' => $this->user->profile->id));
+		$data['events'] = Events::model()->for_this_user()->findAll();
 		$data['others'] = Users::model()->other_users()->findAll();
 		$this->render('index-view', $data);
 	}
@@ -30,14 +30,34 @@ class SiteController extends BaseController
 			{
 				Ajax::warning($event->firstError())	;
 			}
-			//Ajax::custom('update_events', json_encode($this->user->profile->events));
-			Ajax::message('OK!');
+			$events = Events::model()->for_this_user()->findAll();
+			Ajax::custom('upload_events', Ajax::modelToJson($events));
 		}
 		catch (Exception $e)
 		{
 			Ajax::warning($e->getMessage());
 		}
+	}
 
+	public function actionRemoveEvent()
+	{
+		try
+		{
+			$id = $_POST['id'];
+
+			/** @var Events $event */
+			$event = Events::model()->for_this_user()->findByPk($id);
+			if ( ! $event->delete())
+			{
+				Ajax::message($event->firstError());
+			}
+			$events = Events::model()->for_this_user()->findAll();
+			Ajax::custom('remove_events', Ajax::modelToJson($events));
+		}
+		catch (Exception $e)
+		{
+			Ajax::warning($e->getMessage());
+		}
 	}
 
 	/**

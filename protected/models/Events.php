@@ -31,11 +31,18 @@ class Events extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('user_id, date, time_hour, title', 'required'),
-			array('user_id, time_hour, attach_user', 'numerical', 'integerOnly'=>true),
-			array('attach_user', 'compare', 'allowEmpty' => true, 'compareAttribute' => 'user_id', 'operator' => '!=', 'message' => 'You cannot attach your self to the event!'),
-			array('title', 'length', 'max'=>100),
-			array('type', 'length', 'max'=>100),
-			array('text', 'length', 'max'=>500),
+			array('user_id, time_hour, attach_user', 'numerical', 'integerOnly' => TRUE),
+			array(
+				'attach_user',
+				'compare',
+				'allowEmpty'       => TRUE,
+				'compareAttribute' => 'user_id',
+				'operator'         => '!=',
+				'message'          => 'You cannot attach your self to the event!'
+			),
+			array('title', 'length', 'max' => 100),
+			array('type', 'length', 'max' => 100),
+			array('text', 'length', 'max' => 500),
 		);
 	}
 
@@ -46,8 +53,7 @@ class Events extends CActiveRecord
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
-		return array(
-		);
+		return array();
 	}
 
 	/**
@@ -56,14 +62,13 @@ class Events extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'user_id' => 'User',
-			'title' => 'Title',
-			'text' => 'Text',
-			'date' => 'Date of Event',
+			'user_id'   => 'User',
+			'title'     => 'Title',
+			'text'      => 'Text',
+			'date'      => 'Date of Event',
 			'time_hour' => 'Hour of Event',
 		);
 	}
-
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -71,7 +76,7 @@ class Events extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return Events the static model class
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
@@ -82,7 +87,9 @@ class Events extends CActiveRecord
 		foreach ($this->errors as $errors)
 		{
 			foreach ($errors as $error)
+			{
 				$s[] = $error;
+			}
 		}
 		return $s;
 	}
@@ -93,4 +100,23 @@ class Events extends CActiveRecord
 		return current($errors);
 	}
 
+	/**
+	 * Returns all events for current logged user
+	 * @return Events[]
+	 */
+	/**
+	 * returns all users except current
+	 * @return $this
+	 */
+	public function for_this_user()
+	{
+		if (Yii::app()->user->isGuest)
+		{
+			return NULL;
+		}
+		$this->getDbCriteria()->mergeWith(array(
+			'condition' => 'user_id = ' . Yii::app()->user->profile->id,
+		));
+		return $this;
+	}
 }

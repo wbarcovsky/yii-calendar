@@ -69,7 +69,8 @@ $this->client_script->registerScriptFile('js/index.js');
 				</button>
 			</div>
 			<div class="form-group col-md-5">
-				<button type="submit" class="form-control btn btn-default">
+				<button type="button" class="form-control btn btn-default" id="remove-button"
+						onclick="ajax_remove_event();" data-url="<?= Yii::app()->createUrl('site/removeEvent'); ?>">
 					<span class="glyphicon glyphicon-remove-sign"></span> Remove
 				</button>
 			</div>
