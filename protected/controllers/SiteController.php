@@ -17,7 +17,13 @@ class SiteController extends BaseController
 			$data = $_POST;
 			if ( ! empty($data['event_id']))
 			{
-				$event = Events::model()->findByPk($data['event_id']);
+				/** @var Events $event */
+				$event = Events::model()->for_this_user()->findByPk($data['event_id']);
+				if (empty($event))
+				{
+					Ajax::warning('Cannot find requested item!');
+				}
+
 			}
 			else
 			{

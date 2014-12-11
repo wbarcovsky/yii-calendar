@@ -65,6 +65,10 @@ class Ajax
 	 */
 	public static function modelToJson($models)
 	{
+		if (empty($models))
+		{
+			return json_encode(array());
+		}
 		if (is_array($models))
 		{
 			foreach ($models as $model)

@@ -23,7 +23,7 @@ $this->client_script->registerScriptFile('js/index.js');
 	</div>
 </nav>
 <div class="panel panel-default col-md-7">
-	<form class="form-horizontal" action="<?= Yii::app()->createUrl('site/editEvent'); ?>" method="post" onsubmit="return ajax_submit(this)">
+	<form id="event-form" class="form-horizontal" action="<?= Yii::app()->createUrl('site/editEvent'); ?>" method="post" onsubmit="return ajax_submit(this)">
 		<div class="text-success">Information for events on <span id="form-date"></span> <span id="form-time"></span></div>
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Title</label>

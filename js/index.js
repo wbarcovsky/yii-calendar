@@ -1,6 +1,6 @@
 var current_date = new Date();
 var current_hour = 7;
-
+var current_event = null;
 $(document).ready(function()
 {
 	$('#calendar').datepicker(
@@ -25,6 +25,20 @@ $(document).ready(function()
 
 	set_new_date(current_date);
 	update_datepicker();
+
+	$(".table td:not(.static)").kendoDraggable({
+		hint: function() {
+			return $("#draggable").clone();
+		},
+		dragstart: onDragStart,
+		dragend: onDragEnd
+	});
+	$(".table td:not(.static)").kendoDropTarget(
+	{
+		dragenter: droptargetOnDragEnter,
+		dragleave: droptargetOnDragLeave,
+		drop: droptargetOnDrop
+	});
 });
 
 /**
@@ -57,7 +71,7 @@ function update_datepicker()
 
 function my_date_format(date)
 {
-	return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+	return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 }
 
 function set_new_date(new_date)
@@ -98,9 +112,11 @@ function update_events()
 	$("select>option:selected").removeAttr('selected');
 	$('#create-group').removeClass('hide');
 	$('#edit-group').addClass('hide');
+	current_event = null;
 	events.forEach(function(event)
 	{
-		$('.table').find('td[data-today=' + event.date +'][data-hour=' + event.time_hour + ']').addClass('event').text(event.title);
+		$('td[data-today="' + event.date +'"][data-hour="' + event.time_hour + '"]').addClass('event').text(event.title);
+		console.log('td[data-today="' + event.date +'"][data-hour="' + event.time_hour + '"]');
 		if (event.date == my_date_format(current_date) && event.time_hour == current_hour)
 		{
 			$("input[name='title']").val(event.title);
@@ -110,7 +126,7 @@ function update_events()
 			$("select>option[value='" + event.attach_user + "']").attr('selected', 'selected');
 			$('#create-group').addClass('hide');
 			$('#edit-group').removeClass('hide');
-
+			current_event = event;
 		}
 	});
 }
@@ -148,12 +164,52 @@ function upload_events(json)
 {
 	$('#events').text(json);
 	set_new_date(current_date);
-	swal('Event successfully saved!');
+	swal('Event successfully saved!', '', 'success');
 }
 
 function remove_events(json)
 	{
 	$('#events').text(json);
 	set_new_date(current_date);
-	swal('Event successfully removed');
+	swal('Event successfully removed', '', 'success');
+}
+
+function onDragStart(e)
+{
+	$(e.target).click();
+	$('.table').css('cursor', 'move');
+}
+
+function onDragEnd()
+{
+	$('.table').css('cursor', 'default');
+}
+
+function droptargetOnDragEnter(e)
+{
+	if (current_event != null)
+	{
+		$(e.dropTarget).addClass('current');
+		$(e.dropTarget).text(current_event.title);
+	}
+}
+
+function droptargetOnDragLeave(e)
+{
+	if (current_event != null)
+	{
+		$(e.dropTarget).removeClass('current');
+		$(e.dropTarget).text('');
+	}
+}
+
+function droptargetOnDrop(e)
+{
+	if (current_event != null)
+	{
+		$("input[name='date']").val($(e.dropTarget).data('today'));
+		$("input[name='time_hour']").val($(e.dropTarget).data('hour'));
+		$('#event-form').submit();
+	}
+	$(e.dropTarget).click();
 }

@@ -6,6 +6,7 @@
 	<?= CHtml::scriptFile('js/bootstrap-datepicker.js');?>
 	<?= CHtml::scriptFile('js/bootstrap-datepicker.js');?>
 	<?= CHtml::scriptFile('js/sweet-alert.min.js');?>
+	<?= CHtml::scriptFile('js/kendo.all.min.js');?>
 	<?= CHtml::scriptFile('js/ajax-form.js');?>
 
 	<?= CHtml::cssFile('css/bootstrap.min.css');?>

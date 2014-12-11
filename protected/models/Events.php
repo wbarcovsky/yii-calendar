@@ -43,6 +43,7 @@ class Events extends CActiveRecord
 			array('title', 'length', 'max' => 100),
 			array('type', 'length', 'max' => 100),
 			array('text', 'length', 'max' => 500),
+			array('date', 'uniqueDateTime'),
 		);
 	}
 
@@ -68,6 +69,22 @@ class Events extends CActiveRecord
 			'date'      => 'Date of Event',
 			'time_hour' => 'Hour of Event',
 		);
+	}
+
+	public function uniqueDateTime($attribute, $params)
+	{
+		/** @var Events[] $events */
+		$events = self::model()->findAllByAttributes(array('time_hour' => $this->time_hour, 'date' => $this->date));
+		if ( ! empty($events))
+		{
+			foreach ($events as $other_event)
+			{
+				if ($other_event->id != $this->id)
+				{
+					$this->addError($attribute, 'You cannot place two event at the same date and time!');
+				}
+			}
+		}
 	}
 
 	/**
