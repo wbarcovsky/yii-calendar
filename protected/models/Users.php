@@ -62,6 +62,12 @@ class Users extends CActiveRecord
 		return parent::model($className);
 	}
 
+	/**
+	 * Regsiter new user in system
+	 * @param string $email
+	 * @param string $password password before md5 crypting
+	 * @return null|Users Returns created user on NULL if fails
+	 */
 	public static function register($email, $password)
 	{
 		$user = new Users();
@@ -74,8 +80,29 @@ class Users extends CActiveRecord
 		return NULL;
 	}
 
+	/**
+	 * Finds user by email
+	 * @param sting $email
+	 * @return Users|NULL returns NULL if fails to search
+	 */
 	public static function findUserByEmail($email)
 	{
 		return Users::model()->find('LOWER(email)=?', array(strtolower($email)));
+	}
+
+	/**
+	 * returns all users except current
+	 * @return $this
+	 */
+	public function other_users()
+	{
+		if ( Yii::app()->user->isGuest)
+		{
+			return $this;
+		}
+		$this->getDbCriteria()->mergeWith(array(
+			'condition'=>'id <> ' . Yii::app()->user->profile->id,
+		));
+		return $this;
 	}
 }

@@ -30,5 +30,26 @@
 
 .table>tbody>tr>td.current
 {
-	background: #b2dba1 !important;
+	background: #5cb85c !important;
+	border: 2px solid #006600 !important;
+}
+
+.table>tbody>tr>td.event
+{
+	text-align: center;
+	background: #b2dba1;
+}
+
+.form-horizontal>.text-success
+{
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.panel-calendar
+{
+	/* margin-top: 60px; */
 }

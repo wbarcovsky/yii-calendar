@@ -5,8 +5,39 @@ class SiteController extends BaseController
 
 	public function actionIndex()
 	{
-		$data['events'] = $this->user->profile->errors;
+		$data['events'] = Events::model()->findAllByAttributes(array('user_id' => $this->user->profile->id));
+		$data['others'] = Users::model()->other_users()->findAll();
 		$this->render('index-view', $data);
+	}
+
+	public function actionEditEvent()
+	{
+		try
+		{
+			$data = $_POST;
+			if ( ! empty($data['event_id']))
+			{
+				$event = Events::model()->findByPk($data['event_id']);
+			}
+			else
+			{
+				$event = new Events();
+			}
+			unset($data['event_id']);
+			$event->attributes = $data;
+			$event->user_id = $this->user->profile->id;
+			if ( ! $event->save())
+			{
+				Ajax::warning($event->firstError())	;
+			}
+			//Ajax::custom('update_events', json_encode($this->user->profile->events));
+			Ajax::message('OK!');
+		}
+		catch (Exception $e)
+		{
+			Ajax::warning($e->getMessage());
+		}
+
 	}
 
 	/**

@@ -57,4 +57,26 @@ class Ajax
 		print json_encode($json);
 		exit();
 	}
+
+	/**
+	 * Returns json string for array of models
+	 * @param CModel|CModel[] $models
+	 * @return string
+	 */
+	public static function modelToJson($models)
+	{
+		if (is_array($models))
+		{
+			foreach ($models as $model)
+			{
+				$result[] = $model->attributes;
+			}
+			return json_encode($result);
+		}
+		else
+		{
+			return json_encode($models->attributes);
+		}
+
+	}
 }

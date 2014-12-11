@@ -2,6 +2,7 @@
 /**
  * @var $this BaseController
  * @var $events Events[]
+ * @var $others Users[]
  */
 
 $this->pageTitle = 'Wellcome!';
@@ -21,7 +22,65 @@ $this->client_script->registerScriptFile('js/index.js');
 		</div>
 	</div>
 </nav>
-<div class="panel panel-default col-md-3 row">
+<div class="panel panel-default col-md-7">
+	<form class="form-horizontal" action="<?= Yii::app()->createUrl('site/editEvent'); ?>" method="post" onsubmit="return ajax_submit(this)">
+		<div class="text-success">Information for events on <span id="form-date"></span> <span id="form-time"></span></div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Title</label>
+			<div class="col-sm-10">
+					<input type="text" class="form-control" name="title" placeholder="Title for event">
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Type</label>
+			<div class="col-sm-10">
+					<input type="text" class="form-control" name="type" placeholder="Type of the event">
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Attached user</label>
+			<div class="col-sm-10">
+				<select name="attach_user" class="form-control">
+					<option value="">[no user]</option>
+					<? foreach($others as $other_user):?>
+					<option value="<?= $other_user->id; ?>"><?= $other_user->email; ?></option>
+					<? endforeach; ?>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Text</label>
+			<div class="col-sm-10">
+				<textarea name="text" class="form-control"></textarea>
+			</div>
+		</div>
+
+		<div class="form-group col-md-5 pull-right" id="create-group">
+			<button type="submit" class="form-control btn btn-success">
+				<span class="glyphicon glyphicon-plus-sign"></span> Create
+			</button>
+		</div>
+
+
+		<div id="edit-group" class="hide">
+			<div class="form-group col-md-5 pull-right" id="">
+				<button type="submit" class="form-control btn btn-success">
+					<span class="glyphicon glyphicon-edit"></span> Edit
+				</button>
+			</div>
+			<div class="form-group col-md-5">
+				<button type="submit" class="form-control btn btn-default">
+					<span class="glyphicon glyphicon-remove-sign"></span> Remove
+				</button>
+			</div>
+		</div>
+
+		<input type="hidden" name="date" value=""/>
+		<input type="hidden" name="time_hour" value="">
+		<input type="hidden" name="event_id" value="0">
+	</form>
+</div>
+<div class="panel panel-default col-md-3 panel-calendar pull-right">
 	<div class="panel-body ">
 		<div id="calendar"></div>
 	</div>
@@ -42,7 +101,7 @@ $this->client_script->registerScriptFile('js/index.js');
 	<tbody>
 	<? for ($i = 7; $i < 24;$i++): ?>
 		<tr>
-			<td data-hour="<?= $i; ?>"><?= sprintf('%02d', $i); ?>:00</td>
+			<td data-hour="<?= $i; ?>" class="static"><?= sprintf('%02d', $i); ?>:00</td>
 			<?php for($j = 1; $j <= 7; $j++): ?>
 				<td class="day-cell" data-hour="<?= $i; ?>" data-day="<?= $j == 7 ? 0 : $j; ?>"></td>
 			<? endfor; ?>
@@ -51,7 +110,5 @@ $this->client_script->registerScriptFile('js/index.js');
 	</tbody>
 </table>
 <script type="application/json" id="events">
-{
-	<?php echo json_encode($events); ?>
-}
+	<?= Ajax::modelToJson($events); ?>
 </script>

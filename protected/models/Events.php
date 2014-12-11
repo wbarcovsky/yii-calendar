@@ -6,11 +6,11 @@
  * The followings are the available columns in table 'events':
  * @property integer $id
  * @property integer $user_id
+ * @property integer $attach_user
  * @property string $title
  * @property string $text
  * @property string $date
  * @property integer $time_hour
- * @property integer $time_min
  */
 class Events extends CActiveRecord
 {
@@ -30,13 +30,12 @@ class Events extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, date, time_hour, time_min', 'required'),
-			array('user_id, time_hour, time_min', 'numerical', 'integerOnly'=>true),
+			array('user_id, date, time_hour, title', 'required'),
+			array('user_id, time_hour, attach_user', 'numerical', 'integerOnly'=>true),
+			array('attach_user', 'compare', 'allowEmpty' => true, 'compareAttribute' => 'user_id', 'operator' => '!=', 'message' => 'You cannot attach your self to the event!'),
 			array('title', 'length', 'max'=>100),
+			array('type', 'length', 'max'=>100),
 			array('text', 'length', 'max'=>500),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, title, text, date, time_hour, time_min', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,46 +56,14 @@ class Events extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
 			'user_id' => 'User',
 			'title' => 'Title',
 			'text' => 'Text',
-			'date' => 'Date',
-			'time_hour' => 'Time Hour',
-			'time_min' => 'Time Min',
+			'date' => 'Date of Event',
+			'time_hour' => 'Hour of Event',
 		);
 	}
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('text',$this->text,true);
-		$criteria->compare('date',$this->date,true);
-		$criteria->compare('time_hour',$this->time_hour);
-		$criteria->compare('time_min',$this->time_min);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -107,6 +74,23 @@ class Events extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public function allErrors()
+	{
+		$s = array();
+		foreach ($this->errors as $errors)
+		{
+			foreach ($errors as $error)
+				$s[] = $error;
+		}
+		return $s;
+	}
+
+	public function firstError()
+	{
+		$errors = $this->allErrors();
+		return current($errors);
 	}
 
 }
