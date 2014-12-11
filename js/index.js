@@ -213,3 +213,17 @@ function droptargetOnDrop(e)
 	}
 	$(e.dropTarget).click();
 }
+
+function last_week()
+{
+	current_date.setTime(current_date.getTime() - 7 * 86400000);
+	update_datepicker();
+	set_new_date(current_date);
+}
+
+function next_week()
+{
+	current_date.setTime(current_date.getTime() + 7 * 86400000);
+	update_datepicker();
+	set_new_date(current_date);
+}

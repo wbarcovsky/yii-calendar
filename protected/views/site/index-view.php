@@ -84,6 +84,8 @@ $this->client_script->registerScriptFile('js/index.js');
 <div class="panel panel-default col-md-3 panel-calendar pull-right">
 	<div class="panel-body ">
 		<div id="calendar"></div>
+		<button id="last-week" class="btn btn-default col-md-6" onclick="last_week()"><span class="glyphicon glyphicon-chevron-left"></span> Last week</button>
+		<button id="next-week" class="btn btn-default col-md-6" onclick="next_week()">Netx week <span class="glyphicon glyphicon-chevron-right"></span></button>
 	</div>
 </div>
 <table class="table table-bordered">
