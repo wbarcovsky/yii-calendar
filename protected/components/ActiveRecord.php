@@ -4,7 +4,6 @@ class ActiveRecord extends CActiveRecord
 {
     use ModelTrait;
 
-
     /**
      * @see CActiveRecord::model()
      * @param $className string
