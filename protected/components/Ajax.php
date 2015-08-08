@@ -59,7 +59,7 @@ class Ajax
 
     /**
      * Returns json string for array of models
-     * @param CModel|CModel[] $models
+     * @param CModel|CModel[]|mixed $models
      * @return string
      */
     public static function modelToJson($models)

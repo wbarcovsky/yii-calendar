@@ -1,4 +1,7 @@
-<?php /* @var $this BaseController */ ?>
+<?php /**
+ * @var $this BaseController
+ * @var $content string
+ */ ?>
 <html xml:lang="en" lang="en">
 <head>
 	<?= CHtml::scriptFile('js/jquery-2.1.1.min.js');?>

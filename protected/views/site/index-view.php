@@ -18,7 +18,7 @@ $this->client_script->registerScriptFile('js/index.js');
 			<p class="navbar-text navbar-right">
 				<a href="<?= Yii::app()->createUrl('site/logout') ?>"><span class="glyphicon glyphicon-log-out"></span> Log out</a>
 			</p>
-			<p class="navbar-text navbar-right"><?= $this->user->profile->email?></p>
+			<p class="navbar-text navbar-right"><?= $this->user->profile->email ?></p>
 		</div>
 	</div>
 </nav>
@@ -42,9 +42,9 @@ $this->client_script->registerScriptFile('js/index.js');
 			<div class="col-sm-10">
 				<select name="attach_user" class="form-control">
 					<option value="">[no user]</option>
-					<? foreach($others as $other_user):?>
-					<option value="<?= $other_user->id; ?>"><?= $other_user->email; ?></option>
-					<? endforeach; ?>
+					<?php foreach($others as $other_user):?>
+					    <option value="<?= $other_user->id; ?>"><?= $other_user->email; ?></option>
+					<?php endforeach; ?>
 				</select>
 			</div>
 		</div>
@@ -102,14 +102,14 @@ $this->client_script->registerScriptFile('js/index.js');
 	</tr>
 	</thead>
 	<tbody>
-	<? for ($i = 7; $i < 24;$i++): ?>
+	<?php for ($i = 7; $i < 24;$i++): ?>
 		<tr>
 			<td data-hour="<?= $i; ?>" class="static"><?= sprintf('%02d', $i); ?>:00</td>
 			<?php for($j = 1; $j <= 7; $j++): ?>
 				<td class="day-cell" data-hour="<?= $i; ?>" data-day="<?= $j == 7 ? 0 : $j; ?>"></td>
-			<? endfor; ?>
+			<?php endfor; ?>
 		</tr>
-	<? endfor; ?>
+	<?php endfor; ?>
 	</tbody>
 </table>
 <script type="application/json" id="events">

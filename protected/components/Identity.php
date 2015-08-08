@@ -20,7 +20,7 @@ class Identity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		$res = Users::model()->find('LOWER(email)=? AND password=MD5(?)', array(strtolower($this->username), $this->password));
+		$res = Users::model()->find('LOWER(email)=? AND password=MD5(?)', [strtolower($this->username), $this->password]);
 		if ( ! $res)
 		{
 			return FALSE;
