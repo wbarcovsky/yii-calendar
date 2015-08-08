@@ -7,133 +7,79 @@
  * @property integer $id
  * @property integer $user_id
  * @property integer $attach_user
- * @property string $title
- * @property string $text
- * @property string $date
+ * @property string  $title
+ * @property string  $text
+ * @property string  $date
  * @property integer $time_hour
  */
-class Events extends CActiveRecord
+class Events extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'events';
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return [
+            ['user_id, date, time_hour, title', 'required'],
+            ['user_id, time_hour, attach_user', 'numerical', 'integerOnly' => true],
+            [
+                'attach_user',
+                'compare',
+                'allowEmpty'       => true,
+                'compareAttribute' => 'user_id',
+                'operator'         => '!=',
+                'message'          => 'You cannot attach your self to the event!'
+            ],
+            ['title, type', 'length', 'max' => 100],
+            ['text', 'length', 'max' => 500],
+            ['date', 'uniqueDateTime'],
+        ];
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('user_id, date, time_hour, title', 'required'),
-			array('user_id, time_hour, attach_user', 'numerical', 'integerOnly' => TRUE),
-			array(
-				'attach_user',
-				'compare',
-				'allowEmpty'       => TRUE,
-				'compareAttribute' => 'user_id',
-				'operator'         => '!=',
-				'message'          => 'You cannot attach your self to the event!'
-			),
-			array('title', 'length', 'max' => 100),
-			array('type', 'length', 'max' => 100),
-			array('text', 'length', 'max' => 500),
-			array('date', 'uniqueDateTime'),
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        return [];
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array();
-	}
+    /**
+     * Validate rule for event attribute
+     * @param $attribute
+     * @param $params
+     */
+    public function uniqueDateTime($attribute, $params)
+    {
+        $events = self::model()->findAllByAttributes([
+            'time_hour' => $this->time_hour,
+            'date'      => $this->date,
+            'user_id'   => $this->user_id
+        ]);
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'user_id'   => 'User',
-			'title'     => 'Title',
-			'text'      => 'Text',
-			'date'      => 'Date of Event',
-			'time_hour' => 'Hour of Event',
-		);
-	}
+        if ( !empty($events)) {
+            foreach ($events as $other_event) {
+                if ($other_event->id != $this->id) {
+                    $this->addError($attribute, 'You cannot place two event at the same date and time!');
+                }
+            }
+        }
+    }
 
-	public function uniqueDateTime($attribute, $params)
-	{
-		/** @var Events[] $events */
-		$events = self::model()->findAllByAttributes(array('time_hour' => $this->time_hour, 'date' => $this->date, 'user_id' => $this->user_id));
-		if ( ! empty($events))
-		{
-			foreach ($events as $other_event)
-			{
-				if ($other_event->id != $this->id)
-				{
-					$this->addError($attribute, 'You cannot place two event at the same date and time!');
-				}
-			}
-		}
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Events the static model class
-	 */
-	public static function model($className = __CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	public function allErrors()
-	{
-		$s = array();
-		foreach ($this->errors as $errors)
-		{
-			foreach ($errors as $error)
-			{
-				$s[] = $error;
-			}
-		}
-		return $s;
-	}
-
-	public function firstError()
-	{
-		$errors = $this->allErrors();
-		return current($errors);
-	}
-
-	/**
-	 * Returns all events for current logged user
-	 * @return Events[]
-	 */
-	/**
-	 * returns all users except current
-	 * @return $this
-	 */
-	public function for_this_user()
-	{
-		if (Yii::app()->user->isGuest)
-		{
-			return NULL;
-		}
-		$this->getDbCriteria()->mergeWith(array(
-			'condition' => 'user_id = ' . Yii::app()->user->profile->id,
-		));
-		return $this;
-	}
+    /**
+     * returns all event for logged user
+     * @return $this
+     */
+    public function for_this_user()
+    {
+        if (Yii::app()->user->isGuest) {
+            return null;
+        }
+        $this->getDbCriteria()->mergeWith([
+            'condition' => 'user_id = ' . Yii::app()->user->profile->id,
+        ]);
+        return $this;
+    }
 }
