@@ -39,7 +39,7 @@ class SiteController extends BaseController
     public function actionRemoveEvent()
     {
         try {
-            $id = $_POST['id'];
+            $id = intval($_POST['id']);
 
             $event = Events::model()->for_this_user()->findByPk($id);
             if ( !$event->delete()) {
@@ -101,7 +101,7 @@ class SiteController extends BaseController
     {
         if ($error = Yii::app()->errorHandler->error) {
             if (Yii::app()->request->isAjaxRequest) {
-                echo $error['message'];
+                Ajax::warning($error);
             } else {
                 $this->render('error', $error);
             }

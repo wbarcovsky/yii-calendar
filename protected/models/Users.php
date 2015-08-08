@@ -70,7 +70,8 @@ class Users extends ActiveRecord
             return $this;
         }
         $this->getDbCriteria()->mergeWith([
-            'condition' => 'id <> ' . Yii::app()->user->profile->id,
+            'condition' => 'id <> :id',
+            'params' => ['id' => Yii::app()->user->profile->id],
         ]);
         return $this;
     }

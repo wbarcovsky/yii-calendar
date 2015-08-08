@@ -78,7 +78,8 @@ class Events extends ActiveRecord
             return null;
         }
         $this->getDbCriteria()->mergeWith([
-            'condition' => 'user_id = ' . Yii::app()->user->profile->id,
+            'condition' => 'user_id = :id',
+            'params' => ['id' => Yii::app()->user->profile->id],
         ]);
         return $this;
     }
